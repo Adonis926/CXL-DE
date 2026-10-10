@@ -37,7 +37,7 @@ build_pagerank() {
     -DHYDRARPC_ROOT="$ROOT/hydrarpc" \
     -DMR_ENABLE_CXLFORK=ON \
     -DCXLFORK_UAPI_INCLUDE_DIR="$uapi"
-  cmake --build "$output" -j"$JOBS"
+  cmake --build "$output" --target pagerank_hydra -j"$JOBS"
   sha256sum "$output/pagerank_hydra"
 }
 
