@@ -1,6 +1,6 @@
 [submodule "cxlfork"]
 	path = cxlfork
-	url = https://github.com/Adonis926/cxlfork-repro.git
+	url = https://github.com/Adonis926/CXLfork.git
 	branch = ae-cxlde-manifest
 	ignore = untracked
 [submodule "hydrarpc"]
@@ -23,5 +23,5 @@
 	branch = ae-cxlde-openwhisk
 [submodule "openwhisk-e2e"]
 	path = openwhisk-e2e
-	url = https://github.com/Adonis926/cxlfork-repro.git
+	url = https://github.com/Adonis926/CXLfork.git
 	branch = ae-cxlde-openwhisk-portable
