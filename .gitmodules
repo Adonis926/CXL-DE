@@ -1,0 +1,19 @@
+[submodule "cxlfork"]
+	path = cxlfork
+	url = git@github.com:qmyyxtl/cxlfork-repro.git
+	branch = ae-cxlde-manifest
+	ignore = untracked
+[submodule "hydrarpc"]
+	path = hydrarpc
+	url = git@github.com:Adonis926/HydraRPC.git
+	branch = cxlde-pagerank-103
+	ignore = untracked
+[submodule "pagerank"]
+	path = pagerank
+	url = git@github.com:Adonis926/PageRank-distributed.git
+	branch = ae-reserved-dram-backend
+	ignore = untracked
+[submodule "qemu"]
+	path = qemu
+	url = https://github.com/qemu/qemu.git
+	ignore = untracked
