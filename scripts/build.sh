@@ -42,7 +42,14 @@ build_pagerank() {
 }
 
 build_openwhisk() {
-  (cd "$ROOT/openwhisk" && ./gradlew :core:standalone:bootJar)
+  local java_home=${OPENWHISK_JAVA_HOME:-$ROOT/runtime/openwhisk/assets/jdk-11}
+  [[ -x $java_home/bin/java ]] || {
+    echo "OpenWhisk requires JDK 11; run bootstrap-lux.sh or set OPENWHISK_JAVA_HOME" >&2
+    return 1
+  }
+  (cd "$ROOT/openwhisk" && \
+    env JAVA_HOME="$java_home" PATH="$java_home/bin:$PATH" \
+      ./gradlew --no-daemon :core:standalone:bootJar)
   sha256sum "$ROOT/openwhisk/bin/openwhisk-standalone.jar"
 }
 

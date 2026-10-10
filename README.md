@@ -99,6 +99,10 @@ against `versions/cxlde.env`.
 ./scripts/build.sh openwhisk-e2e
 ```
 
+The OpenWhisk build automatically uses the validated JDK 11 linked by
+`bootstrap-lux.sh`; on another host set `OPENWHISK_JAVA_HOME` to a JDK 11
+installation.  It does not change the host-wide Java selection.
+
 Or build all components in dependency order:
 
 ```bash
