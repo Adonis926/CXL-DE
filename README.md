@@ -101,7 +101,9 @@ against `versions/cxlde.env`.
 
 The OpenWhisk build automatically uses the validated JDK 11 linked by
 `bootstrap-lux.sh`; on another host set `OPENWHISK_JAVA_HOME` to a JDK 11
-installation.  It does not change the host-wide Java selection.
+installation.  It does not change the host-wide Java selection.  Lux also
+links a hash-locked Swagger UI tarball because that host has no general HTTPS
+egress; on an Internet-connected host Gradle can download it normally.
 
 Or build all components in dependency order:
 

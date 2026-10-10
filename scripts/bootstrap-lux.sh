@@ -48,6 +48,8 @@ link_asset /home/xtl/start/hpca-cxlfork/cloudinit \
   "$ROOT/runtime/openwhisk/cloudinit"
 link_asset /home/xtl/start/hpca-cxlfork/kernels/bzImage-6.6.32-cxlfork-91 \
   "$ROOT/runtime/openwhisk/kernel/bzImage-6.6.32-cxlfork-91"
+link_asset /home/xtl/start/cxlde-assets/openwhisk/swagger-ui-v3.6.0.tar.gz \
+  "$ROOT/runtime/openwhisk/build-cache/swagger-ui-v3.6.0.tar.gz"
 mkdir -p "$ROOT/runtime/openwhisk/cxlfork-vms" "$ROOT/results/openwhisk"
 
 echo "Lux runtime assets are linked; no source or image was copied"

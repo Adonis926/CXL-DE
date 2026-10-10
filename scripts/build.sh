@@ -3,6 +3,8 @@ set -euo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 JOBS=${JOBS:-$(nproc)}
+# shellcheck source=/dev/null
+source "$ROOT/versions/cxlde.env"
 
 build_kernel() {
   local source=$ROOT/cxlfork/kernel/linux-6.6.32
@@ -43,10 +45,20 @@ build_pagerank() {
 
 build_openwhisk() {
   local java_home=${OPENWHISK_JAVA_HOME:-$ROOT/runtime/openwhisk/assets/jdk-11}
+  local swagger=${OPENWHISK_SWAGGER_TARBALL:-$ROOT/runtime/openwhisk/build-cache/swagger-ui-v3.6.0.tar.gz}
+  local swagger_dest=$ROOT/openwhisk/core/standalone/build/tmp/swagger/swagger-ui.tar
   [[ -x $java_home/bin/java ]] || {
     echo "OpenWhisk requires JDK 11; run bootstrap-lux.sh or set OPENWHISK_JAVA_HOME" >&2
     return 1
   }
+  if [[ -r $swagger ]]; then
+    [[ $(sha256sum "$swagger" | awk '{print $1}') == "$OPENWHISK_SWAGGER_UI_SHA256" ]] || {
+      echo "Swagger UI build asset has the wrong SHA256: $swagger" >&2
+      return 1
+    }
+    mkdir -p "$(dirname "$swagger_dest")"
+    install -m 0644 "$swagger" "$swagger_dest"
+  fi
   (cd "$ROOT/openwhisk" && \
     env JAVA_HOME="$java_home" PATH="$java_home/bin:$PATH" \
       ./gradlew --no-daemon :core:standalone:bootJar)
