@@ -1,16 +1,16 @@
 [submodule "cxlfork"]
 	path = cxlfork
-	url = git@github.com:qmyyxtl/cxlfork-repro.git
+	url = https://github.com/qmyyxtl/cxlfork-repro.git
 	branch = ae-cxlde-manifest
 	ignore = untracked
 [submodule "hydrarpc"]
 	path = hydrarpc
-	url = git@github.com:Adonis926/HydraRPC.git
+	url = https://github.com/Adonis926/HydraRPC.git
 	branch = cxlde-pagerank-103
 	ignore = untracked
 [submodule "pagerank"]
 	path = pagerank
-	url = git@github.com:Adonis926/PageRank-distributed.git
+	url = https://github.com/Adonis926/PageRank-distributed.git
 	branch = ae-reserved-dram-backend
 	ignore = untracked
 [submodule "qemu"]
@@ -19,9 +19,9 @@
 	ignore = untracked
 [submodule "openwhisk"]
 	path = openwhisk
-	url = git@github.com:Adonis926/OpenWhisk-CXL-DE.git
+	url = https://github.com/Adonis926/OpenWhisk-CXL-DE.git
 	branch = ae-cxlde-openwhisk
 [submodule "openwhisk-e2e"]
 	path = openwhisk-e2e
-	url = git@github.com:qmyyxtl/cxlfork-repro.git
+	url = https://github.com/qmyyxtl/cxlfork-repro.git
 	branch = ae-cxlde-openwhisk-portable
