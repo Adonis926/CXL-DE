@@ -11,11 +11,25 @@ git -C "$ROOT" submodule sync --recursive
 git -C "$ROOT" submodule update --init \
   cxlfork hydrarpc pagerank qemu openwhisk openwhisk-e2e
 git -C "$ROOT/cxlfork" submodule sync
-git -C "$ROOT/cxlfork" submodule update --init \
-  kernel/linux-6.6.32 cxlporter
 git -C "$ROOT/openwhisk-e2e" submodule sync
-git -C "$ROOT/openwhisk-e2e" submodule update --init \
-  kernel/linux-6.6.32 cxlporter
+
+if [[ $(hostname -s) == Lux && -d /home/xtl/cxlfork/cxlfork-repro/kernel/linux-6.6.32 ]]; then
+  # Lux keeps recovery mirrors for the private historical component remotes.
+  # The overrides are invocation-local and do not alter the locked gitlinks.
+  git -C "$ROOT/cxlfork" -c protocol.file.allow=always \
+    -c submodule.kernel/linux-6.6.32.url=/home/xtl/cxlfork/cxlfork-repro/kernel/linux-6.6.32 \
+    -c submodule.cxlporter.url=/home/xtl/cxlfork/cxlfork-repro/.git/modules/cxlporter \
+    submodule update --init kernel/linux-6.6.32 cxlporter
+  git -C "$ROOT/openwhisk-e2e" -c protocol.file.allow=always \
+    -c submodule.kernel/linux-6.6.32.url=/home/xtl/cxlfork/cxlfork-repro/kernel/linux-6.6.32 \
+    -c submodule.cxlporter.url=/home/xtl/cxlfork/cxlfork-repro/.git/worktrees/openwhisk-state-action-eval/modules/cxlporter \
+    submodule update --init kernel/linux-6.6.32 cxlporter
+else
+  git -C "$ROOT/cxlfork" submodule update --init \
+    kernel/linux-6.6.32 cxlporter
+  git -C "$ROOT/openwhisk-e2e" submodule update --init \
+    kernel/linux-6.6.32 cxlporter
+fi
 
 check_head() {
   local label=$1 path=$2 expected=$3 actual

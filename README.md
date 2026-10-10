@@ -31,9 +31,11 @@ cd CXL-DE
 ./scripts/checkout-components.sh
 ```
 
-All source submodules use public GitHub repositories. The team `sync91` mirrors
-remain only as recovery copies and are not required by this checkout. The
-locked commits in `versions/cxlde.env` are the authoritative source versions.
+The newly separated HydraRPC, PageRank, and OpenWhisk repositories are public.
+The historical CXLfork orchestration, kernel, and CXLporter remotes still
+require team access; on Lux the checkout script automatically uses the
+read-only recovery mirrors.  The locked commits in `versions/cxlde.env` are
+the authoritative source versions.
 
 ## Lux quick start
 
