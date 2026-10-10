@@ -26,6 +26,10 @@ show_component cxlporter "$ROOT/cxlfork/cxlporter" "$CXLPORTER_COMMIT"
 show_component hydrarpc "$ROOT/hydrarpc" "$HYDRARPC_COMMIT"
 show_component pagerank "$ROOT/pagerank" "$PAGERANK_COMMIT"
 show_component qemu "$ROOT/qemu" "$QEMU_COMMIT"
+show_component openwhisk "$ROOT/openwhisk" "$OPENWHISK_COMMIT"
+show_component openwhisk-e2e "$ROOT/openwhisk-e2e" "$OPENWHISK_E2E_COMMIT"
+show_component owe-kernel "$ROOT/openwhisk-e2e/kernel/linux-6.6.32" "$OPENWHISK_KERNEL_COMMIT"
+show_component owe-cxlporter "$ROOT/openwhisk-e2e/cxlporter" "$OPENWHISK_CXLPORTER_COMMIT"
 
 config_hash=$(sha256sum "$ROOT/configs/cxlfork-guest-6.6.32.config" | awk '{print $1}')
 printf '%-16s %s expected=%s\n' kernel-config "$config_hash" "$KERNEL_CONFIG_SHA256"
@@ -38,6 +42,22 @@ fi
 if [[ -f $ROOT/cxlfork/kernel/build-6.6.32/arch/x86/boot/bzImage ]]; then
   hash=$(sha256sum "$ROOT/cxlfork/kernel/build-6.6.32/arch/x86/boot/bzImage" | awk '{print $1}')
   printf '%-16s %s validated=%s\n' kernel-image "$hash" "$VALIDATED_KERNEL_IMAGE_SHA256"
+fi
+
+if [[ -f $ROOT/runtime/openwhisk/kernel/bzImage-6.6.32-cxlfork-91 ]]; then
+  hash=$(sha256sum "$ROOT/runtime/openwhisk/kernel/bzImage-6.6.32-cxlfork-91" | awk '{print $1}')
+  printf '%-16s %s validated=%s\n' owe-kernel-image "$hash" "$OPENWHISK_KERNEL_IMAGE_SHA256"
+  [[ $hash == "$OPENWHISK_KERNEL_IMAGE_SHA256" ]] || status=1
+fi
+if [[ -f $ROOT/runtime/openwhisk/assets/openwhisk.jar ]]; then
+  hash=$(sha256sum "$ROOT/runtime/openwhisk/assets/openwhisk.jar" | awk '{print $1}')
+  printf '%-16s %s validated=%s\n' openwhisk-jar "$hash" "$OPENWHISK_JAR_SHA256"
+  [[ $hash == "$OPENWHISK_JAR_SHA256" ]] || status=1
+fi
+if [[ -f $ROOT/runtime/openwhisk/assets/wsk ]]; then
+  hash=$(sha256sum "$ROOT/runtime/openwhisk/assets/wsk" | awk '{print $1}')
+  printf '%-16s %s validated=%s\n' wsk "$hash" "$OPENWHISK_WSK_SHA256"
+  [[ $hash == "$OPENWHISK_WSK_SHA256" ]] || status=1
 fi
 
 if [[ -x $ROOT/pagerank/scripts/cxlde-shared-backend.sh ]]; then

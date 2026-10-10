@@ -8,9 +8,13 @@ LOCK=$ROOT/versions/cxlde.env
 source "$LOCK"
 
 git -C "$ROOT" submodule sync --recursive
-git -C "$ROOT" submodule update --init cxlfork hydrarpc pagerank qemu
+git -C "$ROOT" submodule update --init \
+  cxlfork hydrarpc pagerank qemu openwhisk openwhisk-e2e
 git -C "$ROOT/cxlfork" submodule sync
 git -C "$ROOT/cxlfork" submodule update --init \
+  kernel/linux-6.6.32 cxlporter
+git -C "$ROOT/openwhisk-e2e" submodule sync
+git -C "$ROOT/openwhisk-e2e" submodule update --init \
   kernel/linux-6.6.32 cxlporter
 
 check_head() {
@@ -33,5 +37,9 @@ check_head cxlporter "$ROOT/cxlfork/cxlporter" "$CXLPORTER_COMMIT"
 check_head hydrarpc "$ROOT/hydrarpc" "$HYDRARPC_COMMIT"
 check_head pagerank "$ROOT/pagerank" "$PAGERANK_COMMIT"
 check_head qemu "$ROOT/qemu" "$QEMU_COMMIT"
+check_head openwhisk "$ROOT/openwhisk" "$OPENWHISK_COMMIT"
+check_head openwhisk-e2e "$ROOT/openwhisk-e2e" "$OPENWHISK_E2E_COMMIT"
+check_head owe-kernel "$ROOT/openwhisk-e2e/kernel/linux-6.6.32" "$OPENWHISK_KERNEL_COMMIT"
+check_head owe-cxlporter "$ROOT/openwhisk-e2e/cxlporter" "$OPENWHISK_CXLPORTER_COMMIT"
 
 echo "CXL-DE component checkout is locked and clean"

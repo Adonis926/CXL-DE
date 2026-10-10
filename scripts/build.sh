@@ -41,8 +41,22 @@ build_pagerank() {
   sha256sum "$output/pagerank_hydra"
 }
 
+build_openwhisk() {
+  (cd "$ROOT/openwhisk" && ./gradlew :core:standalone:bootJar)
+  sha256sum "$ROOT/openwhisk/bin/openwhisk-standalone.jar"
+}
+
+build_openwhisk_e2e() {
+  make -C "$ROOT/openwhisk-e2e/cxlporter" -j"$JOBS"
+  sha256sum \
+    "$ROOT/openwhisk-e2e/cxlporter/state-action-http" \
+    "$ROOT/openwhisk-e2e/cxlporter/state-action-capsule" \
+    "$ROOT/openwhisk-e2e/cxlporter/cxlporter-paper" \
+    "$ROOT/openwhisk-e2e/cxlporter/cxlfork-ghost-agent"
+}
+
 if (( $# == 0 )); then
-  echo "usage: $0 {kernel|qemu|pagerank|all} [...]" >&2
+  echo "usage: $0 {kernel|qemu|pagerank|openwhisk|openwhisk-e2e|all} [...]" >&2
   exit 2
 fi
 
@@ -51,10 +65,14 @@ for component in "$@"; do
     kernel) build_kernel ;;
     qemu) build_qemu ;;
     pagerank) build_pagerank ;;
+    openwhisk) build_openwhisk ;;
+    openwhisk-e2e) build_openwhisk_e2e ;;
     all)
       build_kernel
       build_qemu
       build_pagerank
+      build_openwhisk
+      build_openwhisk_e2e
       ;;
     *) echo "unknown component: $component" >&2; exit 2 ;;
   esac

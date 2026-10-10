@@ -2,8 +2,8 @@
 
 This repository is the top-level source manifest for the CXL-DE system used by
 the Cohort evaluation.  CXL-DE combines CXLfork execution-context activation
-with HydraRPC communication and runs the distributed PageRank workload in two
-QEMU/KVM guests.
+with HydraRPC communication.  It contains both the distributed PageRank path
+and the OpenWhisk end-to-end path evaluated in Cohort.
 
 The implementation is split into independent repositories:
 
@@ -14,6 +14,10 @@ cxlfork/                         VM launch/control repository
 hydrarpc/                        shared-memory RPC runtime
 pagerank/                        PageRank user-space program and experiment runner
 qemu/                            upstream QEMU used by the evaluated setup
+openwhisk/                       custom OpenWhisk source used by Figure 9
+openwhisk-e2e/                   frozen Figure 9 controller and CXLfork closure
+  kernel/linux-6.6.32/           OpenWhisk experiment guest kernel
+  cxlporter/                     OpenWhisk CXLfork state-transfer helpers
 ```
 
 Do not select component branches independently.  The superproject gitlinks and
@@ -41,6 +45,7 @@ key can be reused without copying them into Git:
 ./scripts/status.sh
 ./scripts/run-pagerank.sh 8 --check
 ./scripts/run-pagerank.sh 8
+./scripts/run-openwhisk.sh preflight
 ```
 
 The PageRank runner automatically selects the reserved-DRAM backend when the
@@ -56,15 +61,43 @@ The real-CXL device must first be placed in devdax mode using the preserved
 administrator flow.  The reserved-DRAM runner prepares only the exact e820
 namespace and clears only the locked device-relative range `[4,12) GiB`.
 
+## OpenWhisk E2E
+
+The OpenWhisk path defaults to the CXL-DE/CXLfork system only.  `preflight` is
+read-only.  `provision` creates a new experiment disk and new qcow2 overlays
+under this checkout, leaving the historical campaign directory untouched.
+
+```bash
+./scripts/run-openwhisk.sh preflight
+sudo -E ./scripts/run-openwhisk.sh provision
+sudo -E ./scripts/run-openwhisk.sh run figure9 8 16 32 64 80
+./scripts/run-openwhisk.sh status figure9
+```
+
+The backend can be selected explicitly without changing the experiment:
+
+```bash
+./scripts/run-openwhisk.sh --backend reserved-dram preflight
+sudo -E ./scripts/run-openwhisk.sh --backend reserved-dram run figure9 8 16 32 64 80
+./scripts/run-openwhisk.sh --backend real-cxl preflight
+```
+
+The runner resolves the actual `/dev/dax*` device and its required mapping
+alignment at runtime.  It preserves the paper layout: CXLfork uses `[4,8) GiB`
+and HydraRPC uses `[8,12) GiB`.  Runtime JDK/JAR/CLI assets are hash-checked
+against `versions/cxlde.env`.
+
 ## Build from source
 
 ```bash
 ./scripts/build.sh kernel
 ./scripts/build.sh qemu
 ./scripts/build.sh pagerank
+./scripts/build.sh openwhisk
+./scripts/build.sh openwhisk-e2e
 ```
 
-Or build all three in dependency order:
+Or build all components in dependency order:
 
 ```bash
 ./scripts/build.sh all

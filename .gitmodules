@@ -17,3 +17,11 @@
 	path = qemu
 	url = https://github.com/qemu/qemu.git
 	ignore = untracked
+[submodule "openwhisk"]
+	path = openwhisk
+	url = git@github.com:Adonis926/OpenWhisk-CXL-DE.git
+	branch = ae-cxlde-openwhisk
+[submodule "openwhisk-e2e"]
+	path = openwhisk-e2e
+	url = git@github.com:qmyyxtl/cxlfork-repro.git
+	branch = ae-cxlde-openwhisk-portable

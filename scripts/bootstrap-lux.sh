@@ -35,4 +35,19 @@ link_asset /home/xtl/start/hpca-cxlfork/keys/id_ed25519 \
   "$ROOT/runtime/keys/id_ed25519"
 mkdir -p "$ROOT/results/pagerank-cxlfork-hydrarpc"
 
+# OpenWhisk source is tracked as submodules; only the large, validated runtime
+# inputs remain server-local.  The new workspace and overlays are deliberately
+# not linked to the historical campaign directory.
+link_asset /home/xtl/start/hpca-openwhisk-eval/assets \
+  "$ROOT/runtime/openwhisk/assets"
+link_asset /home/xtl/start/hpca/private-master.raw \
+  "$ROOT/runtime/openwhisk/ssi-base.raw"
+link_asset /home/xtl/start/hpca-cxlfork/images \
+  "$ROOT/runtime/openwhisk/base-images"
+link_asset /home/xtl/start/hpca-cxlfork/cloudinit \
+  "$ROOT/runtime/openwhisk/cloudinit"
+link_asset /home/xtl/start/hpca-cxlfork/kernels/bzImage-6.6.32-cxlfork-91 \
+  "$ROOT/runtime/openwhisk/kernel/bzImage-6.6.32-cxlfork-91"
+mkdir -p "$ROOT/runtime/openwhisk/cxlfork-vms" "$ROOT/results/openwhisk"
+
 echo "Lux runtime assets are linked; no source or image was copied"
