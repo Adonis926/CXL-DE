@@ -71,8 +71,8 @@ under this checkout, leaving the historical campaign directory untouched.
 
 ```bash
 ./scripts/run-openwhisk.sh preflight
-sudo -E ./scripts/run-openwhisk.sh provision
-sudo -E ./scripts/run-openwhisk.sh run figure9 8 16 32 64 80
+sudo -E ./scripts/run-openwhisk.sh --exclusive provision
+sudo -E ./scripts/run-openwhisk.sh --exclusive run figure9 8 16 32 64 80
 ./scripts/run-openwhisk.sh status figure9
 ```
 
@@ -80,7 +80,7 @@ The backend can be selected explicitly without changing the experiment:
 
 ```bash
 ./scripts/run-openwhisk.sh --backend reserved-dram preflight
-sudo -E ./scripts/run-openwhisk.sh --backend reserved-dram run figure9 8 16 32 64 80
+sudo -E ./scripts/run-openwhisk.sh --backend reserved-dram --exclusive run figure9 8 16 32 64 80
 ./scripts/run-openwhisk.sh --backend real-cxl preflight
 ```
 

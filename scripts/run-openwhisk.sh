@@ -3,12 +3,22 @@ set -euo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 BACKEND=auto
+EXCLUSIVE=0
 
-if [[ ${1:-} == --backend ]]; then
-  [[ $# -ge 2 ]] || { echo "--backend needs auto, reserved-dram, or real-cxl" >&2; exit 2; }
-  BACKEND=$2
-  shift 2
-fi
+while [[ ${1:-} == --* ]]; do
+  case $1 in
+    --backend)
+      [[ $# -ge 2 ]] || { echo "--backend needs auto, reserved-dram, or real-cxl" >&2; exit 2; }
+      BACKEND=$2
+      shift 2
+      ;;
+    --exclusive)
+      EXCLUSIVE=1
+      shift
+      ;;
+    *) echo "unknown option: $1" >&2; exit 2 ;;
+  esac
+done
 
 case "$BACKEND" in
   auto|reserved-dram|real-cxl) ;;
@@ -17,7 +27,7 @@ esac
 
 COMMAND=${1:-}
 [[ -n $COMMAND ]] || {
-  echo "usage: $0 [--backend BACKEND] {preflight|provision|run|status|summarize} [...]" >&2
+  echo "usage: $0 [--backend BACKEND] [--exclusive] {preflight|provision|run|status|summarize} [...]" >&2
   exit 2
 }
 shift
@@ -39,6 +49,9 @@ export OWE_CXL_BASE_IMAGE_ROOT="$ROOT/runtime/openwhisk/base-images"
 export OWE_CLOUDINIT_ROOT="$ROOT/runtime/openwhisk/cloudinit"
 export OWE_BACKEND_HELPER="$ROOT/pagerank/scripts/cxlde-shared-backend.sh"
 export OWE_SHARED_BACKEND=$BACKEND
+if ((EXCLUSIVE)); then
+  export OWE_EXCLUSIVE_CONFIRM=I_HAVE_EXCLUSIVE_KVM_DAX_103
+fi
 
 case "$COMMAND" in
   run|status|summarize)
